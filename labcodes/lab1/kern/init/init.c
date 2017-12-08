@@ -24,6 +24,7 @@ kern_init(void) {
     cprintf("%s\n\n", message);
 
     print_kerninfo();
+    print_stackframe();
 
     grade_backtrace();
 

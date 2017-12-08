@@ -58,7 +58,7 @@ static uint16_t addr_6845;
 //   -- 0xB8000 - 0xBFFFF 彩色字符模式及 CGA 兼容图形模式
 // 6845芯片是IBM PC中的视频控制器
 // CPU通过IO地址0x3B4-0x3B5来驱动6845控制单色显示，通过IO地址0x3D4-0x3D5来控制彩色显示。
-//    -- 数据寄存器 映射 到 端口 0x3D5或0x3B5 
+//    -- 数据寄存器 映射 到 端口 0x3D5或0x3B5
 //    -- 索引寄存器 0x3D4或0x3B4,决定在数据寄存器中的数据表示什么。
 
 /* TEXT-mode CGA/VGA display output */
@@ -231,6 +231,7 @@ cons_intr(int (*proc)(void)) {
     int c;
     while ((c = (*proc)()) != -1) {
         if (c != 0) {
+            // put the received data in a circular buffer
             cons.buf[cons.wpos ++] = c;
             if (cons.wpos == CONSBUFSIZE) {
                 cons.wpos = 0;
@@ -256,6 +257,8 @@ serial_proc_data(void) {
 void
 serial_intr(void) {
     if (serial_exists) {
+        // pass in a function pointer that will be used
+        // to keep processing the input from the serial port
         cons_intr(serial_proc_data);
     }
 }

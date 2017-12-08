@@ -37,7 +37,7 @@
 static void
 waitdisk(void) {
     while ((inb(0x1F7) & 0xC0) != 0x40)
-        /* do nothing */;
+        /* do nothing, just keep waiting */;
 }
 
 /* readsect - read a single sector at @secno into @dst */
@@ -46,6 +46,8 @@ readsect(void *dst, uint32_t secno) {
     // wait for disk to be ready
     waitdisk();
 
+    // after the disk is ready, send command to load 
+    // sectors from the disk
     outb(0x1F2, 1);                         // count = 1
     outb(0x1F3, secno & 0xFF);
     outb(0x1F4, (secno >> 8) & 0xFF);

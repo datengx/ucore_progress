@@ -40,6 +40,11 @@ kern_init(void){
     lab1_switch_test();
 
     /* do nothing */
+    /*
+    *  Does nothing. The program seems to just stop here and does nothing,
+    *  but the interrupts are enabled so the kernel will still respond
+    *  to some user inputs.
+    */
     while (1);
 }
 
